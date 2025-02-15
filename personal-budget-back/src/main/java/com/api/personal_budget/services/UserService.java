@@ -26,10 +26,26 @@ public class UserService {
     }
 
     @Transactional
-    public User updatePassword(UUID id, String password){
-        User user = repository.findById(id).get();
-        user.setPassword(password);
-        return user;
+    public void updatePassword(String username, String currentPassword, String newPassword, String confirmPassword) {
+        validatePasswords(newPassword, confirmPassword);
+
+        User user = repository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        validateCurrentPassword(user, currentPassword, username);
+
+        user.setPassword(newPassword);
     }
 
+    private void validatePasswords(String newPassword, String confirmPassword) {
+        if (!newPassword.equals(confirmPassword)) {
+            throw new RuntimeException("Novas senhas não conferem!");
+        }
+    }
+
+    private void validateCurrentPassword(User user, String currentPassword, String username) {
+        if (!user.getPassword().equals(currentPassword) || !user.getUsername().equals(username)) {
+            throw new RuntimeException("Senha e/ou username atuais não conferem!");
+        }
+    }
 }

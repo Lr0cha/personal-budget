@@ -2,6 +2,10 @@ package com.api.personal_budget.web.controllers;
 
 import com.api.personal_budget.entities.User;
 import com.api.personal_budget.services.UserService;
+import com.api.personal_budget.web.dto.UpdatePasswordDto;
+import com.api.personal_budget.web.dto.UserCreateDto;
+import com.api.personal_budget.web.dto.UserResponseDto;
+import com.api.personal_budget.web.dto.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +21,20 @@ public class UserController {
     UserService service;
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<UserResponseDto>> findAll(){
         List<User> users = service.findAll();
-        return ResponseEntity.ok().body(users);
+        return ResponseEntity.ok().body(UserMapper.toListDto(users));
     }
 
     @PostMapping
-    public ResponseEntity<User> insert(@RequestBody User obj){
-        User user = service.insert(obj);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    public ResponseEntity<UserResponseDto> insert(@RequestBody UserCreateDto obj){
+        User user = service.insert(UserMapper.toUser(obj));
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
     }
 
-    @PatchMapping(value = "/{id}")
-    public ResponseEntity<User> updatePassword(@PathVariable UUID id, @RequestBody User obj){
-        User user = service.updatePassword(id, obj.getPassword());
-        return ResponseEntity.ok().body(user);
+    @PatchMapping
+    public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordDto obj){
+        service.updatePassword(obj.getUsername() , obj.getCurrentPassword(), obj.getNewPassword(), obj.getConfirmPassword());
+        return ResponseEntity.noContent().build();
     }
 }

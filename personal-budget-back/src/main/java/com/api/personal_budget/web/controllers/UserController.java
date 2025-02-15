@@ -6,6 +6,7 @@ import com.api.personal_budget.web.dto.UpdatePasswordDto;
 import com.api.personal_budget.web.dto.UserCreateDto;
 import com.api.personal_budget.web.dto.UserResponseDto;
 import com.api.personal_budget.web.dto.mapper.UserMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> insert(@RequestBody UserCreateDto obj){
+    public ResponseEntity<UserResponseDto> insert(@Valid @RequestBody UserCreateDto obj){
         User user = service.insert(UserMapper.toUser(obj));
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
     }
 
     @PatchMapping
-    public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordDto obj){
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody UpdatePasswordDto obj){
         service.updatePassword(obj.getUsername() , obj.getCurrentPassword(), obj.getNewPassword(), obj.getConfirmPassword());
         return ResponseEntity.noContent().build();
     }

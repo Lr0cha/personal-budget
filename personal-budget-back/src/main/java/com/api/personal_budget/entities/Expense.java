@@ -1,46 +1,51 @@
 package com.api.personal_budget.entities;
 
-import com.api.personal_budget.entities.enums.Role;
+import com.api.personal_budget.entities.enums.ExpenseType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "tb_users")
-public class User {
+@Getter @Setter @NoArgsConstructor
+@Table(name = "tb_expenses")
+public class Expense {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
-
-    @Column(nullable = false, length = 10)
-    private String password;
+    @Column(nullable = false)
+    private String description;
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 13)
-    private Role role = Role.CLIENT;
+    @Column(name = "expense_type")
+    private ExpenseType expenseType;
 
     @CreatedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_in", nullable = false, updatable = false)
+    private LocalDateTime createdIn;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
+        Expense expense = (Expense) o;
+        return Objects.equals(id, expense.id);
     }
 
     @Override

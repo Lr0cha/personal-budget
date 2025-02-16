@@ -7,6 +7,8 @@ import com.api.personal_budget.exceptions.UsernameUniqueViolationException;
 import com.api.personal_budget.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,23 +25,29 @@ public class UserService {
     }
 
     public User insert(User user) {
-        try{
-            return repository.save(user);
-        }catch(DataIntegrityViolationException ex){
-            throw new UsernameUniqueViolationException(String.format("Username '%s' já existe", user.getUsername()));
+        if (repository.findByUsername(user.getUsername()) != null) {
+            throw new UsernameUniqueViolationException(String.format("Usuário '%s' já existe",user.getUsername()));
         }
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        return repository.save(user);
     }
 
     @Transactional
     public void updatePassword(String username, String currentPassword, String newPassword, String confirmPassword) {
         validatePasswords(newPassword, confirmPassword);
 
-        User user = repository.findByUsername(username)
-                .orElseThrow(() -> new EntityIsNotFoundException("Usuário não encontrado"));
+        UserDetails userDetails = repository.findByUsername(username);
+        if (userDetails == null) {
+            throw new EntityIsNotFoundException("Usuário não encontrado");
+        }
+
+        User user = (User) userDetails;  // Cast
 
         validateCurrentPassword(user, currentPassword, username);
 
-        user.setPassword(newPassword);
+        String encryptedPassword = new BCryptPasswordEncoder().encode(newPassword);
+
+        user.setPassword(encryptedPassword);
     }
 
     private void validatePasswords(String newPassword, String confirmPassword) {

@@ -1,4 +1,4 @@
-package com.api.personal_budget.web.dto;
+package com.api.personal_budget.web.dto.user;
 
 import com.api.personal_budget.entities.enums.Role;
 import lombok.AllArgsConstructor;

@@ -1,10 +1,10 @@
 package com.api.personal_budget.web.controllers;
 
 import com.api.personal_budget.entities.User;
+import com.api.personal_budget.exceptions.InvalidAuthenticationException;
 import com.api.personal_budget.services.TokenService;
-import com.api.personal_budget.web.dto.AuthenticationDto;
-import com.api.personal_budget.web.dto.LoginResponseDto;
-import jakarta.validation.Valid;
+import com.api.personal_budget.web.dto.user.AuthenticationDto;
+import com.api.personal_budget.web.dto.user.LoginResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class AuthController {
 
             return ResponseEntity.ok(new LoginResponseDto(token));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
+            throw new InvalidAuthenticationException("Credenciais inválidas");
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.api.personal_budget.web.dto;
+package com.api.personal_budget.web.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

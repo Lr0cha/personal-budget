@@ -1,8 +1,8 @@
 package com.api.personal_budget.web.dto.mapper;
 
 import com.api.personal_budget.entities.User;
-import com.api.personal_budget.web.dto.UserCreateDto;
-import com.api.personal_budget.web.dto.UserResponseDto;
+import com.api.personal_budget.web.dto.user.UserCreateDto;
+import com.api.personal_budget.web.dto.user.UserResponseDto;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;

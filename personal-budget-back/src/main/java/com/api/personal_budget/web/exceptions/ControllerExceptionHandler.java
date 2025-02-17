@@ -2,6 +2,7 @@ package com.api.personal_budget.web.exceptions;
 
 import com.api.personal_budget.exceptions.ChangePasswordException;
 import com.api.personal_budget.exceptions.EntityIsNotFoundException;
+import com.api.personal_budget.exceptions.InvalidAuthenticationException;
 import com.api.personal_budget.exceptions.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,16 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+
+    }
+
+    @ExceptionHandler(InvalidAuthenticationException.class)
+    public ResponseEntity<ErrorMessage> InvalidAuthenticationException(RuntimeException ex,
+                                                                HttpServletRequest request) {
+        log.error("API ERROR -", ex);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.UNAUTHORIZED, ex.getMessage()));
 
     }
 }

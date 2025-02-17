@@ -1,29 +1,31 @@
 package com.api.personal_budget.entities;
 
 import com.api.personal_budget.entities.enums.ExpenseType;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
 @Table(name = "tb_expenses")
+@EntityListeners(AuditingEntityListener.class)
 public class Expense {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private String description;
+
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
@@ -32,9 +34,8 @@ public class Expense {
     private ExpenseType expenseType;
 
     @CreatedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "created_in", nullable = false, updatable = false)
-    private LocalDateTime createdIn;
+    private LocalDate createdIn;
 
 
     @ManyToOne

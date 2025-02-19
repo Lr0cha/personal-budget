@@ -53,8 +53,13 @@ const Login = () => {
 
       sessionStorage.setItem("token", data.token);
 
-      toast.success("Login realizado com sucesso!");
-      navigate("/");
+      toast.success("Login realizado com sucesso!", {
+        onClose: () => {
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        },
+      });
     } catch (error) {
       toast.error("Erro ao realizar login. Tente novamente.");
     }
@@ -62,7 +67,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <ToastContainer position="top-right" autoClose={2000} />
+      <ToastContainer position="top-right" autoClose={1000} />
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <div className="flex justify-center mb-6">
           <FaWallet className="text-4xl text-green-600" />

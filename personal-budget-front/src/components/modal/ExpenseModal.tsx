@@ -1,12 +1,13 @@
-// src/components/ExpenseModal.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./styles.css";
+import { expenseProps, categoryMap } from "../../types";
 
 interface ExpenseModalProps {
   isOpen: boolean;
   isEdit: boolean;
   onClose: () => void;
-  editExpense: any;
+  editExpense?: expenseProps | null;
+  onSave: (expense: expenseProps) => void;
 }
 
 const ExpenseModal = ({
@@ -14,21 +15,56 @@ const ExpenseModal = ({
   isEdit,
   onClose,
   editExpense,
+  onSave,
 }: ExpenseModalProps) => {
-  const [description, setDescription] = useState(
-    editExpense?.description || ""
-  );
-  const [amount, setAmount] = useState(editExpense?.amount || "");
-  const [category, setCategory] = useState(editExpense?.category || "");
+  const [expenseData, setExpenseData] = useState<expenseProps>({
+    id: editExpense?.id ? editExpense.id : undefined,
+    description: editExpense?.description || "",
+    amount: editExpense?.amount || "",
+    expenseType: editExpense?.expenseType || "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const formErrors: Record<string, string> = {};
+
+    if (
+      expenseData.description === undefined ||
+      expenseData.description.length < 4
+    ) {
+      formErrors.description = "Descrição deve ter no mínimo 4 caracteres";
+    }
+    if (
+      expenseData.amount === undefined ||
+      parseFloat(expenseData.amount) < 0
+    ) {
+      formErrors.amount = "Valor inválido";
+    }
+    setErrors(formErrors);
+    return Object.keys(formErrors).length > 0;
+  };
+
+  useEffect(() => {
+    if (editExpense) {
+      setExpenseData({
+        id: editExpense.id,
+        description: editExpense.description,
+        amount: editExpense.amount,
+        expenseType: editExpense.expenseType,
+      });
+    }
+  }, [editExpense]);
 
   const handleSave = () => {
+    if (validateForm()) return;
+    onSave(expenseData);
     onClose();
+    setExpenseData({ description: "", amount: "", expenseType: "" });
   };
 
   return isOpen ? (
     <div className="modal-container">
       <div className="overlay"></div>
-
       <div className="modal">
         <h3 className="text-xl font-semibold mb-4 text-center">
           {isEdit ? "Editar Despesa" : "Adicionar Despesa"}
@@ -37,10 +73,19 @@ const ExpenseModal = ({
           <label className="block text-sm text-gray-700">Descrição</label>
           <input
             type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={expenseData.description}
+            onChange={(e) =>
+              setExpenseData({
+                ...expenseData,
+                description: e.target.value,
+              })
+            }
             className="w-full p-2 border border-gray-300 rounded-md"
+            readOnly={isEdit}
           />
+          {errors.description && (
+            <p className="mt-2 text-red-700 text-sm">{errors.description}</p>
+          )}
         </div>
         <div className="mb-4">
           <label className="block text-sm text-gray-700">Valor</label>
@@ -48,40 +93,52 @@ const ExpenseModal = ({
             type="number"
             min={0.01}
             step={0.01}
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={expenseData.amount}
+            onChange={(e) =>
+              setExpenseData({
+                ...expenseData,
+                amount: e.target.value,
+              })
+            }
             className="w-full p-2 border border-gray-300 rounded-md"
           />
         </div>
+        {errors.amount && (
+          <p className="mt-2 text-red-700 text-sm">{errors.amount}</p>
+        )}
         <div className="mb-4">
           <label className="block text-sm text-gray-700">Categoria</label>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={expenseData.expenseType}
+            onChange={(e) =>
+              setExpenseData({
+                ...expenseData,
+                expenseType: e.target.value,
+              })
+            }
             className="w-full p-2 border border-gray-300 rounded-md"
             required
+            disabled={isEdit}
           >
-            <option value="">Selecione uma opção...</option>
-            <option value="FOOD">Alimentação</option>
-            <option value="TRANSPORT">Transporte</option>
-            <option value="HEALTH">Saúde</option>
-            <option value="ENTERTAINMENT">Lazer</option>
-            <option value="RENT">Aluguel</option>
-            <option value="OTHER">Outros</option>
+            {Object.keys(categoryMap).map((key) => (
+              <option key={key} value={key}>
+                {categoryMap[key]}
+              </option>
+            ))}
           </select>
         </div>
         <div className="flex justify-end space-x-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-300 rounded-md"
+            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-green-600 text-white rounded-md"
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
           >
-            {editExpense ? "Salvar Alterações" : "Adicionar"}
+            {isEdit ? "Salvar Alterações" : "Adicionar"}
           </button>
         </div>
       </div>

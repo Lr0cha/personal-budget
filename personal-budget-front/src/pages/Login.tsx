@@ -3,6 +3,7 @@ import { FaWallet } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BASE_URL } from "../types";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const Login = () => {
 
   const getDataLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8081/auth/login", {
+      const response = await fetch(`${BASE_URL}auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +68,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <ToastContainer position="top-right" autoClose={1000} />
+      <ToastContainer position="top-right" autoClose={800} />
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <div className="flex justify-center mb-6">
           <FaWallet className="text-4xl text-green-600" />

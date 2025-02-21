@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { FaWallet, FaUser } from "react-icons/fa";
 import { useNavigate, Link } from "react-router";
+import { valuesMenu } from "../types";
 
-const Navbar = () => {
+interface navbarProps {
+  actualPage: string;
+}
+
+const Navbar = ({ actualPage }: navbarProps) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -10,6 +15,8 @@ const Navbar = () => {
     sessionStorage.removeItem("token");
     navigate("/login");
   };
+
+  const menuItems = Object.keys(valuesMenu).filter((key) => key !== actualPage);
 
   return (
     <nav className="bg-white text-black fixed top-0 left-0 right-0 p-4 flex justify-between items-center shadow-md h-19">
@@ -33,22 +40,16 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="absolute right-0 mt-44 bg-green-600 shadow-lg rounded-md w-40">
             <ul className="space-y-0.5 py-1">
-              <li className="text-center">
-                <Link
-                  to="/reports"
-                  className="block px-4 py-2 text-white hover:bg-green-500 rounded-md border-b border-white"
-                >
-                  Meus Relatórios
-                </Link>
-              </li>
-              <li className="text-center">
-                <Link
-                  to="/update"
-                  className="block px-4 py-2 text-white hover:bg-green-500 rounded-md border-b border-white"
-                >
-                  Mudar Senha
-                </Link>
-              </li>
+              {menuItems.map((key) => (
+                <li key={key} className="text-center">
+                  <Link
+                    to={valuesMenu[key].path}
+                    className="block px-4 py-2 text-white hover:bg-green-500 rounded-md border-b border-white"
+                  >
+                    {valuesMenu[key].text}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <button
                   onClick={handleLogout}

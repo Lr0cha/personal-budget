@@ -112,8 +112,10 @@ const Dashboard = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <ToastContainer position="top-right" autoClose={800} />
-      <Navbar />
-      <main className="p-4 mt-18">
+      <div className="h-18">
+        <Navbar />
+      </div>
+      <main className="p-4">
         <header className="flex justify-between items-center bg-white p-6 rounded-lg shadow-lg mb-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-700">

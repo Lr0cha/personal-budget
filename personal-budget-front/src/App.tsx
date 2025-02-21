@@ -3,6 +3,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./routes/PrivateRoute";
+import Report from "./pages/Report";
+import UpdatePassword from "./pages/UpdatePassword";
 
 const App = () => {
   return (
@@ -31,6 +33,24 @@ const App = () => {
           element={
             <PrivateRoute isPrivate={false}>
               <Register />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/reports"
+          element={
+            <PrivateRoute isPrivate={true}>
+              <Report />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/update"
+          element={
+            <PrivateRoute isPrivate={true}>
+              <UpdatePassword />
             </PrivateRoute>
           }
         />

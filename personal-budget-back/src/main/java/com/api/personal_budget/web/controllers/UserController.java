@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/usuarios")
@@ -20,10 +21,16 @@ public class UserController {
     @Autowired
     UserService service;
 
-    @GetMapping
+    @GetMapping("/info")
     public ResponseEntity<List<UserResponseDto>> findAll(){
         List<User> users = service.findAll();
         return ResponseEntity.ok().body(UserMapper.toListDto(users));
+    }
+
+    @GetMapping
+    public ResponseEntity<UserResponseDto> findUserAuthenticated(){
+        User user = service.findUserAuthenticated();
+        return ResponseEntity.ok().body(UserMapper.toDto(user));
     }
 
     @PostMapping

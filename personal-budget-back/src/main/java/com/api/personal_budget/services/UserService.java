@@ -5,8 +5,8 @@ import com.api.personal_budget.exceptions.ChangePasswordException;
 import com.api.personal_budget.exceptions.EntityIsNotFoundException;
 import com.api.personal_budget.exceptions.UsernameUniqueViolationException;
 import com.api.personal_budget.repositories.UserRepository;
+import com.api.personal_budget.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,9 @@ public class UserService {
     public List<User> findAll(){
         return repository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public User findUserAuthenticated() {return SecurityUtils.getAuthenticatedUser();}
 
     public User insert(User user) {
         if (repository.findByUsername(user.getUsername()) != null) {
@@ -61,4 +64,5 @@ public class UserService {
             throw new ChangePasswordException("Senha e username atuais não conferem!");
         }
     }
+
 }

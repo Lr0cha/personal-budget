@@ -9,11 +9,12 @@ import java.time.LocalDate;
 @Getter @Setter
 public class ExpenseResponseDto {
 
+    private Long id;
+    
     private String description;
 
     private BigDecimal amount;
 
     private String expenseType;
 
-    private LocalDate createdIn;
 }

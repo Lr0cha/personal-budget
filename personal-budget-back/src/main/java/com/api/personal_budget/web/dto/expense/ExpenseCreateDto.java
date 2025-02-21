@@ -15,13 +15,13 @@ import java.math.BigDecimal;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class ExpenseCreateDto {
     @NotBlank
-    @Size(min = 4)
+    @Size(min = 4, max = 30)
     private String description;
 
-    @NotNull
+    @NotNull(message = "Campo amount sem valor")
     @Positive(message = "Valor deve ser maior que 0")
     private BigDecimal amount;
 
-    @NotBlank
+    @NotBlank(message = "Campo expenseType vazio")
     private String expenseType;
 }

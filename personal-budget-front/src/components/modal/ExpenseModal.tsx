@@ -67,7 +67,7 @@ const ExpenseModal = ({
       <div className="overlay"></div>
       <div className="modal">
         <h3 className="text-xl font-semibold mb-4 text-center">
-          {isEdit ? "Editar Despesa" : "Adicionar Despesa"}
+          {isEdit ? "Editar valor da Despesa" : "Adicionar Despesa"}
         </h3>
         <div className="mb-4">
           <label className="block text-sm text-gray-700">Descrição</label>
@@ -80,12 +80,40 @@ const ExpenseModal = ({
                 description: e.target.value,
               })
             }
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className={`w-full p-2 border border-gray-300 rounded-md ${
+              isEdit ? "bg-neutral-100" : "bg-white"
+            }`}
             readOnly={isEdit}
           />
           {errors.description && (
             <p className="mt-2 text-red-700 text-sm">{errors.description}</p>
           )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm text-gray-700">Categoria</label>
+          <select
+            value={expenseData.expenseType}
+            onChange={(e) =>
+              setExpenseData({
+                ...expenseData,
+                expenseType: e.target.value,
+              })
+            }
+            className={`w-full p-2 border border-gray-300 rounded-md ${
+              isEdit ? "bg-neutral-100" : "bg-white"
+            }`}
+            required
+            disabled={isEdit}
+          >
+            <option value="" disabled>
+              Selecione...
+            </option>
+            {Object.keys(categoryMap).map((key) => (
+              <option key={key} value={key}>
+                {categoryMap[key]}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label className="block text-sm text-gray-700">Valor</label>
@@ -106,27 +134,6 @@ const ExpenseModal = ({
         {errors.amount && (
           <p className="mt-2 text-red-700 text-sm">{errors.amount}</p>
         )}
-        <div className="mb-4">
-          <label className="block text-sm text-gray-700">Categoria</label>
-          <select
-            value={expenseData.expenseType}
-            onChange={(e) =>
-              setExpenseData({
-                ...expenseData,
-                expenseType: e.target.value,
-              })
-            }
-            className="w-full p-2 border border-gray-300 rounded-md"
-            required
-            disabled={isEdit}
-          >
-            {Object.keys(categoryMap).map((key) => (
-              <option key={key} value={key}>
-                {categoryMap[key]}
-              </option>
-            ))}
-          </select>
-        </div>
         <div className="flex justify-end space-x-4">
           <button
             onClick={onClose}

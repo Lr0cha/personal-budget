@@ -76,7 +76,9 @@ const UpdatePassword = () => {
       });
       if (response.status === 204) {
         toast.success("Senha atualizada com sucesso");
-        navigate("/");
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
       } else {
         const data = await response.json();
         toast.error(data.message);

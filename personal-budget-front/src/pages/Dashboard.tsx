@@ -5,7 +5,7 @@ import ExpenseModal from "../components/modal/ExpenseModal";
 import ConfirmDeleteModal from "../components/modal/ConfirmDeleteModal";
 import { expenseProps } from "../types";
 import { toast, ToastContainer } from "react-toastify";
-import { MonthYearDisplay } from "../util/formatter";
+import { CurrentMonthYearDisplay, formatCurrency } from "../util/formatter";
 import { BASE_URL } from "../types";
 
 const Dashboard = () => {
@@ -122,17 +122,16 @@ const Dashboard = () => {
               Total de Despesas
             </h2>
             <p className="text-2xl text-green-600 font-bold">
-              R${" "}
-              {expenses
-                .reduce(
+              {formatCurrency(
+                expenses.reduce(
                   (total, expense) => total + parseFloat(expense.amount),
                   0
                 )
-                .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              )}
             </p>
 
             <div>
-              <MonthYearDisplay />
+              <CurrentMonthYearDisplay />
             </div>
           </div>
           <button
@@ -141,7 +140,7 @@ const Dashboard = () => {
               setIsEdit(false);
               setSelectedExpense(null);
             }}
-            className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-500 cursor-pointer"
+            className="px-4 py-2 font-medium bg-green-600 text-white rounded-md shadow-md hover:bg-green-500 cursor-pointer"
           >
             Adicionar Despesa
           </button>

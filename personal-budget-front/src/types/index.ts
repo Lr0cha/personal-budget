@@ -12,8 +12,8 @@ export interface usernameProps {
 }
 
 export const categoryMap: { [key: string]: string } = {
-  MERCADO: "Mercado",
   ALUGUEL: "Aluguel",
+  MERCADO: "Mercado",
   TRANSPORTE: "Transporte",
   LAZER: "Lazer",
   SAUDE: "Saúde",

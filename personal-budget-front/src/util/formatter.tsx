@@ -1,4 +1,4 @@
-export const MonthYearDisplay: React.FC = () => {
+export const CurrentMonthYearDisplay: React.FC = () => {
   const currentDate = new Date();
 
   const formattedMonthYear = new Intl.DateTimeFormat("pt-BR", {
@@ -14,4 +14,13 @@ export const formatCurrency = (value: number): string => {
     style: "currency",
     currency: "BRL",
   }).format(value);
+};
+
+export const formatMonthYear = (monthYear: string) => {
+  const [year, month] = monthYear.split("-");
+  const date = new Date(Number(year), Number(month) - 1);
+  return new Intl.DateTimeFormat("pt-BR", {
+    year: "numeric",
+    month: "long",
+  }).format(date);
 };

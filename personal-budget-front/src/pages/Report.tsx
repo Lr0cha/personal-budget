@@ -1,15 +1,63 @@
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import Navbar from "../components/Navbar";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "../types";
+import { formatCurrency, formatMonthYear } from "../util/formatter";
+
+interface FetchData {
+  totalAmount: number;
+  groupedMonthExpenses: {
+    [key: string]: number;
+  };
+}
+
 const Report = () => {
-  //teste
-  const data = [
-    { month: "Janeiro", value: 550.0 },
-    { month: "Fevereiro", value: 430.0 },
-    { month: "Março", value: 520.0 },
-    { month: "Abril", value: 600.0 },
-    { month: "Maio", value: 800.0 },
-    { month: "Junho", value: 470.0 },
-  ];
+  const token = sessionStorage.getItem("token");
+  let averageValue: number;
+  const [fetchData, setFetchData] = useState<FetchData>({
+    totalAmount: 0,
+    groupedMonthExpenses: {},
+  });
+
+  const getReports = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}api/v1/relatorios`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        setFetchData({
+          totalAmount: data.totalAmount,
+          groupedMonthExpenses: data.groupedMonthExpenses,
+        });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Erro ao buscar relatórios.");
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      getReports();
+    } else {
+      sessionStorage.removeItem("token");
+    }
+  }, [token]);
+
+  const groupedData = Object.entries(fetchData.groupedMonthExpenses).map(
+    ([month, value]) => ({
+      month,
+      value,
+    })
+  );
+
+  averageValue = fetchData.totalAmount / groupedData.length;
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -19,29 +67,47 @@ const Report = () => {
       </div>
       <main className="p-4">
         <header className="flex justify-between items-center bg-white p-6 rounded-lg shadow-lg mb-6">
-          <div>
+          <div className="flex items-center space-x-2">
             <h2 className="text-xl font-semibold text-gray-700">
               Total de Despesas
             </h2>
-            <p className="text-2xl text-green-600 font-bold">R$ 1500,00</p>
+            <p className="text-2xl text-green-600 font-bold">
+              {formatCurrency(fetchData.totalAmount)}
+            </p>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <h2 className="text-xl font-semibold text-gray-700">
+              Total médio mensal
+            </h2>
+            <p className="text-2xl text-green-600 font-bold">
+              {formatCurrency(averageValue)}
+            </p>
           </div>
         </header>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-          {data.map((item, index) => (
+          {groupedData.map((item, index) => (
             <div
               key={index}
               className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition"
             >
               <div className="flex justify-between items-center mb-3">
-                <span className="text-xl text-gray-700">{item.month}</span>
+                <span className="text-xl font-medium uppercase text-gray-500">
+                  {formatMonthYear(item.month)}
+                </span>
                 <span className="text-xl text-green-600 font-bold">
-                  R${item.value.toFixed(2)}
+                  {formatCurrency(item.value)}
                 </span>
               </div>
               <div className="w-full h-2 bg-gray-200 rounded-full">
                 <div
-                  className="h-full bg-green-500 rounded-full"
-                  style={{ width: `${(item.value / 1500) * 100}%` }}
+                  className={`h-full ${
+                    item.value <= averageValue ? "bg-green-500" : "bg-red-500"
+                  }  rounded-full`}
+                  style={{
+                    width: `${(item.value / fetchData.totalAmount) * 100}%`,
+                  }}
                 ></div>
               </div>
             </div>

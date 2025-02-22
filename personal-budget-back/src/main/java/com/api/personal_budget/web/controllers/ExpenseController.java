@@ -28,7 +28,7 @@ public class ExpenseController {
 
     @GetMapping
     public ResponseEntity<List<ExpenseResponseDto>> getExpensesForAuthenticatedUser() {
-        List<Expense> expenses = service.getExpensesForAuthenticatedUser();
+        List<Expense> expenses = service.getMonthExpensesForAuthenticatedUser();
 
         List<ExpenseResponseDto> expenseDtos = ExpenseMapper.toListDto(expenses);
 

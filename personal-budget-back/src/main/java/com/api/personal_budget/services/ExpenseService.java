@@ -23,7 +23,7 @@ public class ExpenseService {
         return repository.save(expense);
     }
 
-    public List<Expense> getExpensesForAuthenticatedUser() {
+    public List<Expense> getMonthExpensesForAuthenticatedUser() {
         User authenticatedUser = SecurityUtils.getAuthenticatedUser();
 
         int currentMonth = LocalDate.now().getMonthValue();  // Mês atual
@@ -32,8 +32,14 @@ public class ExpenseService {
         return repository.findExpensesByUserAndCurrentMonth(authenticatedUser.getId(), currentMonth, currentYear);
     }
 
+    public List<Expense> getAllExpensesForAuthenticatedUser() {
+        User authenticatedUser = SecurityUtils.getAuthenticatedUser();
+
+        return repository.findExpensesByUserId(authenticatedUser.getId());
+    }
+
     private Expense findExpenseById(Long id) {
-        List<Expense> expenses = getExpensesForAuthenticatedUser();
+        List<Expense> expenses = getMonthExpensesForAuthenticatedUser();
 
         return expenses.stream()
                 .filter(expense -> expense.getId().equals(id))

@@ -6,7 +6,6 @@ import com.api.personal_budget.services.TokenService;
 import com.api.personal_budget.web.dto.user.AuthenticationDto;
 import com.api.personal_budget.web.dto.user.LoginResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +25,7 @@ public class AuthController {
     TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationDto obj){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody AuthenticationDto obj){
         try {
             var usernameAndPassword = new UsernamePasswordAuthenticationToken(obj.username(), obj.password());
             var auth = authenticationManager.authenticate(usernameAndPassword);

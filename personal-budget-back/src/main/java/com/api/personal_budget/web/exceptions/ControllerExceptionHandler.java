@@ -39,7 +39,7 @@ public class ControllerExceptionHandler {
 
     }
 
-    @ExceptionHandler(EntityIsNotFoundException.class)
+    @ExceptionHandler({EntityIsNotFoundException.class,IllegalStateException.class})
     public ResponseEntity<ErrorMessage> EntityIsNotFoundException(RuntimeException ex,
                                                                 HttpServletRequest request) {
         log.error("API ERROR -", ex);

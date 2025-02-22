@@ -11,4 +11,5 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     @Query("SELECT e FROM Expense e WHERE e.user.id = :userId AND MONTH(e.createdIn) = :month AND YEAR(e.createdIn) = :year")
     List<Expense> findExpensesByUserAndCurrentMonth(UUID userId, int month, int year);
+    List<Expense> findExpensesByUserId(UUID userId);
 }

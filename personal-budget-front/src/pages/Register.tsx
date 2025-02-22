@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaWallet } from "react-icons/fa";
+import { FaWallet, FaExclamationCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import { BASE_URL } from "../types";
@@ -56,7 +56,7 @@ const Register = () => {
         onClose: () => {
           setTimeout(() => {
             navigate("/login");
-          }, 1000);
+          }, 500);
         },
       });
     } catch (error) {
@@ -91,11 +91,16 @@ const Register = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, username: e.target.value })
                 }
-                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                className={`w-full p-3 mt-2 border rounded-md ${
+                  errors.username ? "border-red-500" : "border-gray-300"
+                } focus:ring-green-500 focus:border-green-500`}
                 required
               />
               {errors.username && (
-                <p className="mt-2 text-red-700 text-sm">{errors.username}</p>
+                <div className="text-red-500 flex items-center mt-1">
+                  <FaExclamationCircle className="mr-2" />
+                  {errors.username}
+                </div>
               )}
             </div>
             <div className="mb-4">
@@ -113,11 +118,16 @@ const Register = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                className={`w-full p-3 mt-2 border rounded-md ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } focus:ring-green-500 focus:border-green-500`}
                 required
               />
               {errors.password && (
-                <p className="mt-2 text-red-700 text-sm">{errors.password}</p>
+                <div className="text-red-500 flex items-center mt-1">
+                  <FaExclamationCircle className="mr-2" />
+                  {errors.password}
+                </div>
               )}
             </div>
             <div className="mb-4">
@@ -135,13 +145,16 @@ const Register = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, confirmPassword: e.target.value })
                 }
-                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                className={`w-full p-3 mt-2 border rounded-md ${
+                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                } focus:ring-green-500 focus:border-green-500`}
                 required
               />
               {errors.confirmPassword && (
-                <p className="mt-2 text-red-700 text-sm">
+                <div className="text-red-500 flex items-center mt-1">
+                  <FaExclamationCircle className="mr-2" />
                   {errors.confirmPassword}
-                </p>
+                </div>
               )}
             </div>
             <button

@@ -7,6 +7,10 @@ export interface expenseProps {
   expenseType: string;
 }
 
+export interface usernameProps {
+  username: string;
+}
+
 export const categoryMap: { [key: string]: string } = {
   MERCADO: "Mercado",
   ALUGUEL: "Aluguel",

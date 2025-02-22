@@ -40,7 +40,7 @@ const App = () => {
         <Route
           path="/reports"
           element={
-            <PrivateRoute isPrivate={true}>
+            <PrivateRoute isPrivate={false}>
               <Report />
             </PrivateRoute>
           }

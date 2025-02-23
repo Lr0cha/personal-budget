@@ -18,6 +18,11 @@ const Dashboard = () => {
   );
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
+  const updateSessionStorage = (data: expenseProps[]) => {
+    sessionStorage.setItem("budgetData", JSON.stringify(data));
+    setExpenses(data);
+  };
+
   const getExpenses = async () => {
     try {
       const response = await fetch(`${BASE_URL}api/v1/despesas`, {
@@ -30,7 +35,7 @@ const Dashboard = () => {
 
       const data = await response.json();
       if (response.status === 200) {
-        setExpenses(data);
+        updateSessionStorage(data);
       } else {
         toast.error("Erro ao buscar despesas.");
       }
@@ -64,7 +69,10 @@ const Dashboard = () => {
       );
       if (response.status === 204) {
         toast.success("Despesa excluída com sucesso.");
-        getExpenses();
+        const updatedExpenses = expenses.filter(
+          (expense) => expense.id !== selectedExpense?.id
+        );
+        updateSessionStorage(updatedExpenses);
         setDeleteModalOpen(false);
       } else {
         toast.error("Erro ao excluir a despesa.");
@@ -102,12 +110,13 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (token) {
-      getExpenses();
+    const savedExpenses = sessionStorage.getItem("budgetData");
+    if (savedExpenses) {
+      setExpenses(JSON.parse(savedExpenses));
     } else {
-      sessionStorage.removeItem("token");
+      getExpenses();
     }
-  }, [token]);
+  }, []);
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -134,6 +143,7 @@ const Dashboard = () => {
               <CurrentMonthYearDisplay />
             </div>
           </div>
+
           <button
             onClick={() => {
               setModalOpen(true);

@@ -58,7 +58,7 @@ const Login = () => {
         onClose: () => {
           setTimeout(() => {
             navigate("/");
-          }, 500);
+          }, 300);
         },
       });
     } catch (error) {

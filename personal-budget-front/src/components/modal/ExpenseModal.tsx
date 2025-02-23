@@ -44,7 +44,12 @@ const ExpenseModal = ({
     return Object.keys(formErrors).length > 0;
   };
 
+  const clearInputs = () => {
+    setExpenseData({ description: "", amount: "", expenseType: "" });
+  };
+
   useEffect(() => {
+    clearInputs();
     if (editExpense) {
       setExpenseData({
         id: editExpense.id,
@@ -59,7 +64,7 @@ const ExpenseModal = ({
     if (validateForm()) return;
     onSave(expenseData);
     onClose();
-    setExpenseData({ description: "", amount: "", expenseType: "" });
+    clearInputs();
   };
 
   return isOpen ? (
@@ -118,9 +123,7 @@ const ExpenseModal = ({
         <div className="mb-4">
           <label className="block text-sm text-gray-700">Valor</label>
           <input
-            type="number"
-            min={0.01}
-            step={0.01}
+            type="text"
             value={expenseData.amount}
             onChange={(e) =>
               setExpenseData({
@@ -130,6 +133,9 @@ const ExpenseModal = ({
             }
             className="w-full p-2 border border-gray-300 rounded-md"
           />
+          {errors.amount && (
+            <p className="mt-2 text-red-700 text-sm">{errors.amount}</p>
+          )}
         </div>
         {errors.amount && (
           <p className="mt-2 text-red-700 text-sm">{errors.amount}</p>

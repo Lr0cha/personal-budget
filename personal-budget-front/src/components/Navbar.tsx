@@ -13,6 +13,7 @@ const Navbar = ({ actualPage }: navbarProps) => {
 
   const handleLogout = () => {
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("budgetData");
     navigate("/login");
   };
 

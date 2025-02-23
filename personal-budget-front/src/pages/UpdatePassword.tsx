@@ -78,7 +78,7 @@ const UpdatePassword = () => {
         toast.success("Senha atualizada com sucesso");
         setTimeout(() => {
           navigate("/");
-        }, 500);
+        }, 800);
       } else {
         const data = await response.json();
         toast.error(data.message);

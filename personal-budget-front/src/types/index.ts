@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:8081/";
+export const BASE_URL = "http://localhost:8080/";
 
 export interface expenseProps {
   id?: number;

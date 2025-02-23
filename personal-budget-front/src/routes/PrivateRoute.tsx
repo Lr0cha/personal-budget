@@ -17,6 +17,7 @@ const PrivateRoute = ({ children, isPrivate }: PrivateRouteProps) => {
     return <Navigate to="/" />;
   }
 
+  // renderiza caso tenha permissão
   return <>{children}</>;
 };
 

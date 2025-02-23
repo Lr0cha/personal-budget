@@ -1,4 +1,4 @@
-export const BASE_URL = "https://personal-budget-0mmm.onrender.com";
+export const BASE_URL = "https://personal-budget-0mmm.onrender.com/";
 
 export interface expenseProps {
   id?: number;

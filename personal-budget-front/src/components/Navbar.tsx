@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaWallet, FaUser } from "react-icons/fa";
-import { useNavigate, Link } from "react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { valuesMenu } from "../types";
 
 interface navbarProps {

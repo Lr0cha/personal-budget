@@ -2,7 +2,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Navbar from "../components/Navbar";
 import { BASE_URL } from "../types";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { FaExclamationCircle } from "react-icons/fa";
 
 const UpdatePassword = () => {

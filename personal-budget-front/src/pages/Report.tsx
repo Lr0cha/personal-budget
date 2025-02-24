@@ -18,6 +18,7 @@ const Report = () => {
     totalAmount: 0,
     groupedMonthExpenses: {},
   });
+  const [loading, setLoading] = useState(false);
 
   const getReports = async () => {
     try {
@@ -34,16 +35,20 @@ const Report = () => {
           totalAmount: data.totalAmount,
           groupedMonthExpenses: data.groupedMonthExpenses,
         });
+        setLoading(false);
       } else {
         toast.error(data.message);
+        setLoading(false);
       }
     } catch (error) {
       toast.error("Erro ao buscar relatórios.");
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (token) {
+      setLoading(true);
       getReports();
     } else {
       sessionStorage.removeItem("token");
@@ -57,7 +62,9 @@ const Report = () => {
     })
   );
 
-  averageValue = fetchData.totalAmount / groupedData.length;
+  averageValue = fetchData.totalAmount
+    ? fetchData.totalAmount / groupedData.length
+    : 0;
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -85,33 +92,47 @@ const Report = () => {
             </p>
           </div>
         </header>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-          {groupedData.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition"
-            >
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-xl font-medium uppercase text-gray-500">
-                  {formatMonthYear(item.month)}
-                </span>
-                <span className="text-xl text-green-600 font-bold">
-                  {formatCurrency(item.value)}
-                </span>
-              </div>
-              <div className="w-full h-2 bg-gray-200 rounded-full">
-                <div
-                  className={`h-full ${
-                    item.value <= averageValue ? "bg-green-500" : "bg-red-500"
-                  }  rounded-full`}
-                  style={{
-                    width: `${(item.value / fetchData.totalAmount) * 100}%`,
-                  }}
-                ></div>
+        <div>
+          {loading ? (
+            <div className="flex justify-center items-center space-x-2">
+              <div className="flex items-center">
+                <div className="animate-spin border-t-4 border-neutral-700 border-solid rounded-full w-12 h-12 mr-2"></div>
+                <h2 className="text-3xl font-medium text-gray-500 mt-2">
+                  Carregando...
+                </h2>
               </div>
             </div>
-          ))}
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+              {groupedData.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition"
+                >
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-xl font-medium uppercase text-gray-500">
+                      {formatMonthYear(item.month)}
+                    </span>
+                    <span className="text-xl text-green-600 font-bold">
+                      {formatCurrency(item.value)}
+                    </span>
+                  </div>
+                  <div className="w-full h-2 bg-gray-200 rounded-full">
+                    <div
+                      className={`h-full ${
+                        item.value <= averageValue
+                          ? "bg-green-500"
+                          : "bg-red-500"
+                      }  rounded-full`}
+                      style={{
+                        width: `${(item.value / fetchData.totalAmount) * 100}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

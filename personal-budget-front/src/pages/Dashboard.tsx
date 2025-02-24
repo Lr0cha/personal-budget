@@ -17,6 +17,7 @@ const Dashboard = () => {
     null
   );
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const updateSessionStorage = (data: expenseProps[]) => {
     sessionStorage.setItem("budgetData", JSON.stringify(data));
@@ -36,11 +37,14 @@ const Dashboard = () => {
       const data = await response.json();
       if (response.status === 200) {
         updateSessionStorage(data);
+        setLoading(false);
       } else {
         toast.error("Erro ao buscar despesas.");
+        setLoading(false);
       }
     } catch (error) {
       toast.error("Erro no servidor, tente novamente!");
+      setLoading(false);
     }
   };
 
@@ -114,6 +118,7 @@ const Dashboard = () => {
     if (savedExpenses) {
       setExpenses(JSON.parse(savedExpenses));
     } else {
+      setLoading(true);
       getExpenses();
     }
   }, []);
@@ -157,11 +162,22 @@ const Dashboard = () => {
         </header>
 
         <div>
-          <ExpenseCards
-            expenses={expenses}
-            onEdit={handleEditExpense}
-            onDelete={handleDeleteExpense}
-          />
+          {loading ? (
+            <div className="flex justify-center items-center space-x-2">
+              <div className="flex items-center">
+                <div className="animate-spin border-t-4 border-neutral-700 border-solid rounded-full w-12 h-12 mr-2"></div>
+                <h2 className="text-3xl font-medium text-gray-500 mt-2">
+                  Carregando...
+                </h2>
+              </div>
+            </div>
+          ) : (
+            <ExpenseCards
+              expenses={expenses}
+              onEdit={handleEditExpense}
+              onDelete={handleDeleteExpense}
+            />
+          )}
         </div>
 
         <ExpenseModal

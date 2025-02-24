@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaWallet, FaExclamationCircle } from "react-icons/fa";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from "../types";
@@ -12,6 +12,7 @@ const Login = () => {
     username: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
     const formErrors: Record<string, string> = {};
@@ -36,6 +37,7 @@ const Login = () => {
   }
 
   const getDataLogin = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${BASE_URL}auth/login`, {
         method: "POST",
@@ -46,9 +48,9 @@ const Login = () => {
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         toast.error(data.message);
+        setLoading(false);
         return;
       }
 
@@ -61,8 +63,10 @@ const Login = () => {
           }, 300);
         },
       });
+      setLoading(false);
     } catch (error) {
       toast.error("Erro ao realizar login. Tente novamente.");
+      setLoading(false);
     }
   };
 
@@ -136,8 +140,36 @@ const Login = () => {
             <button
               type="submit"
               className="w-full py-3 mt-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+              disabled={loading}
             >
-              Login
+              {loading ? (
+                <div className="flex justify-center items-center">
+                  <svg
+                    className="w-5 h-5 mr-2 animate-spin text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 1116 0A8 8 0 014 12z"
+                    ></path>
+                  </svg>
+                  Carregando...
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
           </form>
         </div>

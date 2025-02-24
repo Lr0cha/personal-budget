@@ -3,9 +3,9 @@ import Navbar from "../components/Navbar";
 import { BASE_URL } from "../types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaExclamationCircle } from "react-icons/fa";
-
-const UpdatePassword = () => {
+import { FaExclamationCircle, FaTrash } from "react-icons/fa";
+import ConfirmDeleteModal from "../components/modal/ConfirmDeleteModal";
+const UpdateUser = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [username, setUsername] = useState("");
@@ -14,7 +14,7 @@ const UpdatePassword = () => {
     newPassword: "",
     confirmPassword: "",
   });
-
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const token = sessionStorage.getItem("token");
 
   const validateForm = () => {
@@ -53,6 +53,31 @@ const UpdatePassword = () => {
       }
     } catch (error) {
       toast.error("Erro ao buscar o usuário.");
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}api/v1/usuarios`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 204) {
+        toast.success("Usuário excluído com sucesso.");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("budgetData");
+        navigate("/");
+        setDeleteModalOpen(false);
+      } else {
+        toast.error("Erro ao excluir o usuário.");
+        setDeleteModalOpen(false);
+      }
+    } catch (error) {
+      toast.error("Erro ao excluir o usuário.");
+      setDeleteModalOpen(false);
     }
   };
 
@@ -104,10 +129,10 @@ const UpdatePassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <ToastContainer position="top-right" autoClose={800} />
-      <Navbar actualPage="UPDATE_PASSWORD" />
+      <Navbar actualPage="UPDATE_USER" />
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg mt-20">
         <h2 className="text-xl text-center font-medium mb-4">
-          Mudança de senha
+          Troca de senha / Exclusão
         </h2>
         <form onSubmit={handleUpdatePassword}>
           <div className="mb-4">
@@ -117,14 +142,25 @@ const UpdatePassword = () => {
             >
               Usuário
             </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={username}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-              readOnly={true}
-            />
+            <div className="flex gap-3">
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={username}
+                className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                readOnly={true}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setDeleteModalOpen(true);
+                }}
+                className="text-red-600 hover:scale-110"
+              >
+                <FaTrash className="text-xl" />
+              </button>
+            </div>
           </div>
 
           <div className="mb-4">
@@ -227,9 +263,14 @@ const UpdatePassword = () => {
             Mudar senha
           </button>
         </form>
+        <ConfirmDeleteModal
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
       </div>
     </div>
   );
 };
 
-export default UpdatePassword;
+export default UpdateUser;

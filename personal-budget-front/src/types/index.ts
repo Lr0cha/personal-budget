@@ -35,8 +35,8 @@ export const valuesMenu: { [key: string]: valuesMenuInterface } = {
     text: "Meus relatórios",
     path: "/reports",
   },
-  UPDATE_PASSWORD: {
-    text: "Mudar senha",
+  UPDATE_USER: {
+    text: "Senha/Excluir",
     path: "/update",
   },
 };

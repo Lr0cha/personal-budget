@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./routes/PrivateRoute";
 import Report from "./pages/Report";
-import UpdatePassword from "./pages/UpdatePassword";
+import UpdatePassword from "./pages/UpdateUser";
 
 const App = () => {
   return (

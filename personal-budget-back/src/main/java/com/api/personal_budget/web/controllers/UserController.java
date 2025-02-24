@@ -44,4 +44,11 @@ public class UserController {
         service.updatePassword(obj.getUsername() , obj.getCurrentPassword(), obj.getNewPassword(), obj.getConfirmPassword());
         return ResponseEntity.noContent().build();
     }
+
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUserAuthenticated(){
+        service.deleteUserAuthenticated();
+        return ResponseEntity.noContent().build();
+    }
 }

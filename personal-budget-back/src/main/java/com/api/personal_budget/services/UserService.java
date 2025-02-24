@@ -62,4 +62,8 @@ public class UserService {
         }
     }
 
+    public void deleteUserAuthenticated() {
+        User user = findUserAuthenticated();
+        repository.delete(user);
+    }
 }

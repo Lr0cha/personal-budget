@@ -2,16 +2,15 @@ package com.api.personal_budget.services;
 
 import com.api.personal_budget.entities.Expense;
 import com.api.personal_budget.entities.User;
+import com.api.personal_budget.exceptions.EntityIsNotFoundException;
 import com.api.personal_budget.repositories.ExpenseRepository;
 import com.api.personal_budget.utils.SecurityUtils;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ExpenseService {
@@ -44,7 +43,7 @@ public class ExpenseService {
         return expenses.stream()
                 .filter(expense -> expense.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Despesa não encontrada"));
+                .orElseThrow(() -> new EntityIsNotFoundException("Despesa não encontrada"));
     }
 
     public void deleteExpenseForAuthenticatedUser(Long id) {

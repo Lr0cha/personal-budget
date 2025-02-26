@@ -11,7 +11,7 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm }: DelModalProps) => {
       <div className="overlay"></div>
       <div className="modal">
         <h3 className="text-lg font-semibold mb-4">
-          Tem certeza que deseja excluir esta despesa?
+          Tem certeza que deseja excluir?
         </h3>
         <div className="flex justify-end space-x-4">
           <button

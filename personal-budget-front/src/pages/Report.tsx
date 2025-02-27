@@ -62,6 +62,25 @@ const Report = () => {
     })
   );
 
+  const useScreenWidth = () => {
+    const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth);
+
+    const handleWindowSizeChange = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    useEffect(() => {
+      window.addEventListener("resize", handleWindowSizeChange);
+      return () => {
+        window.removeEventListener("resize", handleWindowSizeChange);
+      };
+    }, []);
+
+    return screenWidth;
+  };
+
+  const screenWidth = useScreenWidth();
+
   averageValue = fetchData.totalAmount
     ? fetchData.totalAmount / groupedData.length
     : 0;
@@ -74,14 +93,16 @@ const Report = () => {
       </div>
       <main className="p-4">
         <header className="flex justify-between items-center bg-white p-6 rounded-lg shadow-lg mb-6">
-          <div className="flex items-center space-x-2">
-            <h2 className="text-xl font-semibold text-gray-700">
-              Total de Despesas
-            </h2>
-            <p className="text-2xl text-green-600 font-bold">
-              {formatCurrency(fetchData.totalAmount)}
-            </p>
-          </div>
+          {screenWidth > 664 && (
+            <div className="flex items-center space-x-2">
+              <h2 className="text-xl font-semibold text-gray-700">
+                Total de Despesas
+              </h2>
+              <p className="text-2xl text-green-600 font-bold">
+                {formatCurrency(fetchData.totalAmount)}
+              </p>
+            </div>
+          )}
 
           <div className="flex items-center space-x-2">
             <h2 className="text-xl font-semibold text-gray-700">

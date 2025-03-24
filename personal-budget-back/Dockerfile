@@ -1,21 +1,21 @@
-FROM ubuntu:latest AS build
-
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
-
-COPY . /app
+FROM maven:3.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-RUN apt-get install maven -y
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-RUN mvn clean install -DskipTests
+COPY src ./src
 
-FROM openjdk:21-jdk-slim
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jdk-alpine
+
+WORKDIR /app
 
 EXPOSE 8080
 
-COPY --from=build /app/target/personal-budget-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=build /app/target/personal-budget-0.0.1-SNAPSHOT.jar app.jar
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
